@@ -632,62 +632,245 @@ const PASSAGES = {
   }
 };
 
-const OPT4 = ['A','B','C','D'];
-const OPT5 = ['A','B','C','D','E'];
+function O(letter, text) { return {letter, text}; }
 
 const QUESTIONS = [
-  {n:1, passage:'p1', type:'single', prompt:'Why does Elena read the sentence "You know where everything is" twice?', opts:OPT4},
-  {n:2, passage:'p1', type:'single', prompt:"Which detail best supports the idea that Tomas trusts Elena's abilities?", opts:OPT4},
-  {n:3, passage:'p1', type:'single', prompt:'What can readers infer about why Tomas arrives late?', opts:OPT4},
-  {n:4, passage:'p1', type:'multi', prompt:'Which TWO details show that Elena becomes more confident during the passage?', opts:OPT5},
-  {n:5, passage:'p1', type:'single', prompt:'Mr. Patel\'s question "You\'ve been promoted?" mainly serves to', opts:OPT4},
-  {n:6, passage:'p1', type:'single', prompt:'Which statement best expresses a theme of the passage?', opts:OPT4},
+  {n:1, passage:'p1', type:'single', prompt:'Why does Elena read the sentence "You know where everything is" twice?', opts:[
+    O('A',"She cannot understand her uncle's handwriting."),
+    O('B',"She realizes her uncle is giving her unusual responsibility."),
+    O('C',"She has forgotten where the repair tools are located."),
+    O('D',"She thinks her uncle has hidden something in the cabinet.")]},
+  {n:2, passage:'p1', type:'single', prompt:"Which detail best supports the idea that Tomas trusts Elena's abilities?", opts:[
+    O('A',"Elena has imagined what was inside the cabinet."),
+    O('B',"Tomas normally arrives fifteen minutes before opening."),
+    O('C',"Tomas leaves Elena instructions and the cabinet key."),
+    O('D',"Mrs. Alvarez plans to collect a clock at ten.")]},
+  {n:3, passage:'p1', type:'single', prompt:'What can readers infer about why Tomas arrives late?', opts:[
+    O('A',"He accidentally overslept."),
+    O('B',"He wanted Elena to handle the shop independently."),
+    O('C',"He had forgotten that the shop was open."),
+    O('D',"He was repairing an item at another location.")]},
+  {n:4, passage:'p1', type:'multi', prompt:'Which TWO details show that Elena becomes more confident during the passage?', opts:[
+    O('A',"She calls her uncle's name when she arrives."),
+    O('B',"She remembers imagining secrets inside the cabinet."),
+    O('C',"She decides to repair Mr. Patel's lamp herself."),
+    O('D',"She explains that some repairs take several days."),
+    O('E',"She handles Mrs. Alvarez's payment and receipt.")]},
+  {n:5, passage:'p1', type:'single', prompt:'Mr. Patel\'s question "You\'ve been promoted?" mainly serves to', opts:[
+    O('A',"criticize Elena for touching the lamp."),
+    O('B',"reveal that Tomas plans to retire."),
+    O('C',"emphasize that Elena is taking on a new role."),
+    O('D',"suggest that Elena has repaired the lamp incorrectly.")]},
+  {n:6, passage:'p1', type:'single', prompt:'Which statement best expresses a theme of the passage?', opts:[
+    O('A',"People learn responsibility when others allow them to use their abilities."),
+    O('B',"Family businesses are more successful than other businesses."),
+    O('C',"Expensive objects should always be repaired rather than replaced."),
+    O('D',"People should refuse responsibilities they were not expecting.")]},
 
-  {n:7, passage:'p2', type:'single', prompt:'What is the central issue discussed in the passage?', opts:OPT4},
-  {n:8, passage:'p2', type:'single', prompt:"Which evidence most strongly supports Flores's argument that replacing the lights could reduce town expenses?", opts:OPT4},
-  {n:9, passage:'p2', type:'single', prompt:'Why does the author include Lee\'s statement that "a working light does not become waste simply because a newer technology exists"?', opts:OPT4},
-  {n:10, passage:'p2', type:'single', prompt:"Which assumption is most important to the engineering department's prediction that the project will recover its cost in about eight years?", opts:OPT4},
-  {n:11, passage:'p2', type:'multi', prompt:'Which TWO statements describe points on which Flores and Lee agree?', opts:OPT5},
+  {n:7, passage:'p2', type:'single', prompt:'What is the central issue discussed in the passage?', opts:[
+    O('A',"Whether Fairmont should remove streetlights completely"),
+    O('B',"Whether LED lights produce enough light for public streets"),
+    O('C',"How quickly Fairmont should replace traditional streetlights with LEDs"),
+    O('D',"Why electricity prices have increased in Fairmont")]},
+  {n:8, passage:'p2', type:'single', prompt:"Which evidence most strongly supports Flores's argument that replacing the lights could reduce town expenses?", opts:[
+    O('A',"The town has approximately 2,400 streetlights."),
+    O('B',"LEDs could reduce streetlight electricity consumption by about 45 percent."),
+    O('C',"Some residents receive unwanted light through their windows."),
+    O('D',"Lee believes the town should replace failed lights.")]},
+  {n:9, passage:'p2', type:'single', prompt:'Why does the author include Lee\'s statement that "a working light does not become waste simply because a newer technology exists"?', opts:[
+    O('A',"To show Lee believes LED technology does not work"),
+    O('B',"To explain why Lee favors replacing lights gradually"),
+    O('C',"To prove that existing streetlights use less electricity"),
+    O('D',"To suggest residents should repair streetlights themselves")]},
+  {n:10, passage:'p2', type:'single', prompt:"Which assumption is most important to the engineering department's prediction that the project will recover its cost in about eight years?", opts:[
+    O('A',"Fairmont will build additional roads."),
+    O('B',"Residents will use less electricity at home."),
+    O('C',"Projected energy and maintenance savings will be reasonably accurate."),
+    O('D',"Every existing streetlight will fail within eight years.")]},
+  {n:11, passage:'p2', type:'multi', prompt:'Which TWO statements describe points on which Flores and Lee agree?', opts:[
+    O('A',"LED lighting can improve energy efficiency."),
+    O('B',"Fairmont should replace every light immediately."),
+    O('C',"Existing lights have no remaining value."),
+    O('D',"Fairmont will eventually use more LED streetlights."),
+    O('E',"The eight-year savings estimate is guaranteed.")]},
 
-  {n:12, passage:'p3', type:'single', prompt:'Which change should be made to sentence 2?', opts:OPT4},
-  {n:13, passage:'p3', type:'single', prompt:'What is the best way to revise sentences 4 and 5?', opts:OPT4},
-  {n:14, passage:'p3', type:'single', prompt:'Which revision best corrects sentence 6?', opts:OPT4},
+  {n:12, passage:'p3', type:'single', prompt:'Which change should be made to sentence 2?', opts:[
+    O('A',"Change helps to help."),
+    O('B',"Change students to student's."),
+    O('C',"Change with to for."),
+    O('D',"No change is necessary.")]},
+  {n:13, passage:'p3', type:'single', prompt:'What is the best way to revise sentences 4 and 5?', opts:[
+    O('A',"Because attendance has increased, the center plans to recruit additional volunteers next month."),
+    O('B',"Because attendance has increased; the center plans to recruit additional volunteers next month."),
+    O('C',"Attendance has increased because. The center plans to recruit additional volunteers next month."),
+    O('D',"Because attendance. Has increased the center plans to recruit additional volunteers next month.")]},
+  {n:14, passage:'p3', type:'single', prompt:'Which revision best corrects sentence 6?', opts:[
+    O('A',"New volunteers will receive training, and lesson materials."),
+    O('B',"New volunteers will receive training they will also receive lesson materials."),
+    O('C',"New volunteers will receive training; they will also receive lesson materials."),
+    O('D',"New volunteers, will receive training, they will also receive lesson materials.")]},
 
-  {n:15, passage:'p4', type:'single', prompt:'What is the main idea of the passage?', opts:OPT4},
-  {n:16, passage:'p4', type:'single', prompt:'Why does the author include the increase from 90 users to more than 260 users per month?', opts:OPT4},
-  {n:17, passage:'p4', type:'single', prompt:"Which statement best describes Arthur Bell's position?", opts:OPT4},
-  {n:18, passage:'p4', type:'single', prompt:'How does Park respond to the criticism that makerspaces do not belong in libraries?', opts:OPT4},
-  {n:19, passage:'p4', type:'single', prompt:"Professor Warren's comments mainly serve to", opts:OPT4},
-  {n:20, passage:'p4', type:'multi', prompt:'Which TWO pieces of information would be most useful when deciding whether to continue funding the makerspace?', opts:OPT5},
-  {n:21, passage:'p4', type:'single', prompt:'Which conclusion is best supported by the passage?', opts:OPT4},
+  {n:15, passage:'p4', type:'single', prompt:'What is the main idea of the passage?', opts:[
+    O('A',"Public libraries should stop purchasing printed books."),
+    O('B',"Westbridge is testing a makerspace as an expanded library service while evaluating its benefits and costs."),
+    O('C',"Technical colleges are replacing libraries in many communities."),
+    O('D',"Westbridge residents strongly oppose all new library programs.")]},
+  {n:16, passage:'p4', type:'single', prompt:'Why does the author include the increase from 90 users to more than 260 users per month?', opts:[
+    O('A',"To demonstrate growing participation in the makerspace"),
+    O('B',"To prove that the makerspace is profitable"),
+    O('C',"To show that the library has too few books"),
+    O('D',"To demonstrate that all residents support the program")]},
+  {n:17, passage:'p4', type:'single', prompt:"Which statement best describes Arthur Bell's position?", opts:[
+    O('A',"Libraries should expand into every form of technical education."),
+    O('B',"The makerspace should be operated by a private engineering company."),
+    O('C',"Libraries should concentrate more narrowly on traditional library purposes."),
+    O('D',"Residents should pay individually for makerspace equipment.")]},
+  {n:18, passage:'p4', type:'single', prompt:'How does Park respond to the criticism that makerspaces do not belong in libraries?', opts:[
+    O('A',"She argues that makerspaces cause people to stop reading books."),
+    O('B',"She explains that makerspace activities can involve reading, research, technology, and employment skills."),
+    O('C',"She admits that the program has failed to attract residents."),
+    O('D',"She proposes transferring the makerspace to a technical college.")]},
+  {n:19, passage:'p4', type:'single', prompt:"Professor Warren's comments mainly serve to", opts:[
+    O('A',"completely reject the makerspace concept."),
+    O('B',"provide a more cautious standard for judging the program."),
+    O('C',"prove that modern technology has no place in libraries."),
+    O('D',"show that Westbridge spends more than other libraries.")]},
+  {n:20, passage:'p4', type:'multi', prompt:'Which TWO pieces of information would be most useful when deciding whether to continue funding the makerspace?', opts:[
+    O('A',"How frequently residents use the equipment"),
+    O('B',"The color of the basement walls"),
+    O('C',"The program's operating and maintenance costs"),
+    O('D',"The age of the oldest book in the library"),
+    O('E',"The distance between Westbridge and the technical college cafeteria")]},
+  {n:21, passage:'p4', type:'single', prompt:'Which conclusion is best supported by the passage?', opts:[
+    O('A',"Library administrators have already decided to expand the makerspace permanently."),
+    O('B',"Makerspaces always improve communities."),
+    O('C',"Westbridge administrators are using evidence before making a long-term decision."),
+    O('D',"The technical college will eventually operate the entire library.")]},
 
-  {n:22, passage:'p5', type:'single', prompt:'At the beginning of the passage, why does Jonah hesitate before entering the shop?', opts:OPT4},
-  {n:23, passage:'p5', type:'single', prompt:'Mr. Vale\'s statement "\'I don\'t know\' is useful" suggests that he believes', opts:OPT4},
-  {n:24, passage:'p5', type:'single', prompt:'Why does the author describe Jonah sorting screws and sweeping before allowing him to work on a clock?', opts:OPT4},
-  {n:25, passage:'p5', type:'single', prompt:"Which event is the turning point in Jonah's attitude toward the job?", opts:OPT4},
-  {n:26, passage:'p5', type:'single', prompt:"What can readers infer about Mr. Vale's teaching style?", opts:OPT4},
-  {n:27, passage:'p5', type:'single', prompt:'The final paragraph mainly shows that Jonah', opts:OPT4},
+  {n:22, passage:'p5', type:'single', prompt:'At the beginning of the passage, why does Jonah hesitate before entering the shop?', opts:[
+    O('A',"He dislikes bicycles."),
+    O('B',"He feels somewhat uncomfortable with the shop and its quiet atmosphere."),
+    O('C',"Mr. Vale has previously refused to speak to him."),
+    O('D',"He already knows the job requires clock-repair experience.")]},
+  {n:23, passage:'p5', type:'single', prompt:'Mr. Vale\'s statement "\'I don\'t know\' is useful" suggests that he believes', opts:[
+    O('A',"admitting uncertainty can be the beginning of learning."),
+    O('B',"employees should avoid asking questions."),
+    O('C',"clock repair does not require much knowledge."),
+    O('D',"mistakes should always be hidden.")]},
+  {n:24, passage:'p5', type:'single', prompt:'Why does the author describe Jonah sorting screws and sweeping before allowing him to work on a clock?', opts:[
+    O('A',"To show that Jonah initially becomes impatient with basic work"),
+    O('B',"To prove that Mr. Vale has forgotten the help-wanted sign"),
+    O('C',"To show Jonah already understands clock mechanisms"),
+    O('D',"To explain why the clock becomes damaged")]},
+  {n:25, passage:'p5', type:'single', prompt:"Which event is the turning point in Jonah's attitude toward the job?", opts:[
+    O('A',"He sees the help-wanted sign."),
+    O('B',"His mother offers to pay for half of a bicycle."),
+    O('C',"Mr. Vale gives him the broken alarm clock to examine."),
+    O('D',"The rain stops at the end of the day.")]},
+  {n:26, passage:'p5', type:'single', prompt:"What can readers infer about Mr. Vale's teaching style?", opts:[
+    O('A',"He prefers students to discover solutions through observation and questions."),
+    O('B',"He gives detailed instructions before allowing students to begin."),
+    O('C',"He becomes angry whenever a student makes a mistake."),
+    O('D',"He believes beginners should never touch equipment.")]},
+  {n:27, passage:'p5', type:'single', prompt:'The final paragraph mainly shows that Jonah', opts:[
+    O('A',"no longer wants to work in the shop."),
+    O('B',"now sees complicated objects as things he can learn to understand."),
+    O('C',"believes clocks should be displayed without glass."),
+    O('D',"regrets trying to repair the alarm clock.")]},
 
-  {n:28, passage:'p6', type:'single', prompt:'What is the primary claim of Passage A?', opts:OPT4},
-  {n:29, passage:'p6', type:'single', prompt:'Which evidence in Passage A is most relevant to the claim?', opts:OPT4},
-  {n:30, passage:'p6', type:'single', prompt:'What concern does Passage B raise about the evidence connecting later starts with more sleep?', opts:OPT4},
-  {n:31, passage:'p6', type:'single', prompt:'Which statement identifies a weakness in Passage B?', opts:OPT4},
-  {n:32, passage:'p6', type:'multi', prompt:'Which TWO concerns are mentioned in both passages?', opts:OPT5},
-  {n:33, passage:'p6', type:'single', prompt:'How do the authors differ in their treatment of scheduling problems?', opts:OPT4},
-  {n:34, passage:'p6', type:'single', prompt:'Which additional evidence would most strengthen Passage A?', opts:OPT4},
+  {n:28, passage:'p6', type:'single', prompt:'What is the primary claim of Passage A?', opts:[
+    O('A',"High schools should begin later because additional sleep can benefit students."),
+    O('B',"Sports should be removed from high schools."),
+    O('C',"Elementary schools should begin before sunrise."),
+    O('D',"Students should be prohibited from working after school.")]},
+  {n:29, passage:'p6', type:'single', prompt:'Which evidence in Passage A is most relevant to the claim?', opts:[
+    O('A',"School schedules have existed for many years."),
+    O('B',"One district reported improved attendance and fewer first-period absences after moving the start time later."),
+    O('C',"Some students participate in sports."),
+    O('D',"Buses transport children to school.")]},
+  {n:30, passage:'p6', type:'single', prompt:'What concern does Passage B raise about the evidence connecting later starts with more sleep?', opts:[
+    O('A',"Teenagers do not require sleep."),
+    O('B',"Schools cannot change their schedules."),
+    O('C',"Students might stay awake later instead of gaining additional sleep."),
+    O('D',"Attendance is unrelated to school schedules.")]},
+  {n:31, passage:'p6', type:'single', prompt:'Which statement identifies a weakness in Passage B?', opts:[
+    O('A',"It acknowledges transportation challenges."),
+    O('B',"It explains how bus schedules can affect younger students."),
+    O('C',"It raises several possible problems but provides little numerical evidence showing how often they occur."),
+    O('D',"It argues that communities differ.")]},
+  {n:32, passage:'p6', type:'multi', prompt:'Which TWO concerns are mentioned in both passages?', opts:[
+    O('A',"Transportation schedules"),
+    O('B',"Student nutrition"),
+    O('C',"Athletic schedules"),
+    O('D',"School construction"),
+    O('E',"Textbook prices")]},
+  {n:33, passage:'p6', type:'single', prompt:'How do the authors differ in their treatment of scheduling problems?', opts:[
+    O('A',"Passage A views them as manageable; Passage B treats them as potentially significant consequences."),
+    O('B',"Passage A says they do not exist; Passage B says they are illegal."),
+    O('C',"Both passages consider them impossible to solve."),
+    O('D',"Both passages refuse to discuss scheduling.")]},
+  {n:34, passage:'p6', type:'single', prompt:'Which additional evidence would most strengthen Passage A?', opts:[
+    O('A',"A survey showing students prefer sleeping late on weekends"),
+    O('B',"Data from several districts showing later starts were followed by increased sleep and improved academic performance"),
+    O('C',"A list of famous people who wake up late"),
+    O('D',"An explanation of how alarm clocks work")]},
 
-  {n:35, passage:'p7', type:'single', prompt:'What is the best revision of sentence 2?', opts:OPT4},
-  {n:36, passage:'p7', type:'single', prompt:'What is the best revision of sentence 4?', opts:OPT4},
-  {n:37, passage:'p7', type:'single', prompt:'Which change should be made to sentence 7?', opts:OPT4},
-  {n:38, passage:'p7', type:'single', prompt:'Which change should be made to sentence 9?', opts:OPT4},
-  {n:39, passage:'p7', type:'single', prompt:'What is the function of "Therefore" in sentence 14?', opts:OPT4},
-  {n:40, passage:'p7', type:'single', prompt:'Which revision correctly punctuates sentence 15?', opts:OPT4},
+  {n:35, passage:'p7', type:'single', prompt:'What is the best revision of sentence 2?', opts:[
+    O('A',"The property had been empty for more than ten years, weeds and trash covered much of the ground."),
+    O('B',"The property had been empty for more than ten years; weeds and trash covered much of the ground."),
+    O('C',"The property had been empty, for more than ten years weeds and trash covered much of the ground."),
+    O('D',"The property had been empty for more than ten years because, weeds and trash covered much of the ground.")]},
+  {n:36, passage:'p7', type:'single', prompt:'What is the best revision of sentence 4?', opts:[
+    O('A',"The soil was safe for gardening however it needed additional nutrients."),
+    O('B',"The soil was safe for gardening; however, it needed additional nutrients."),
+    O('C',"The soil was safe for gardening however; it needed additional nutrients."),
+    O('D',"The soil was safe for gardening, however; it needed additional nutrients.")]},
+  {n:37, passage:'p7', type:'single', prompt:'Which change should be made to sentence 7?', opts:[
+    O('A',"Change families to family's."),
+    O('B',"Change maintains to maintain."),
+    O('C',"Change individual to individually."),
+    O('D',"No change.")]},
+  {n:38, passage:'p7', type:'single', prompt:'Which change should be made to sentence 9?', opts:[
+    O('A',"Change have harvested to has harvested."),
+    O('B',"Change produce to produces."),
+    O('C',"Change gardens to garden's."),
+    O('D',"Change during to while.")]},
+  {n:39, passage:'p7', type:'single', prompt:'What is the function of "Therefore" in sentence 14?', opts:[
+    O('A',"It introduces an example."),
+    O('B',"It shows a cause-and-effect relationship."),
+    O('C',"It shows two ideas are identical."),
+    O('D',"It introduces an unrelated topic.")]},
+  {n:40, passage:'p7', type:'single', prompt:'Which revision correctly punctuates sentence 15?', opts:[
+    O('A',"If the funding is approved, the connection could be installed before next summer."),
+    O('B',"If the funding, is approved the connection could be installed before next summer."),
+    O('C',"If the funding is approved the connection, could be installed before next summer."),
+    O('D',"If, the funding is approved, the connection could be installed before next summer.")]},
 
-  {n:41, passage:'p8', type:'single', prompt:'What is the main purpose of the memorandum?', opts:OPT4},
-  {n:42, passage:'p8', type:'single', prompt:'Why was the previous procedure sometimes problematic?', opts:OPT4},
-  {n:43, passage:'p8', type:'single', prompt:'A shipment contains 12 containers, but the scanner displays a quantity of 11. What should the employee do before moving the merchandise to storage?', opts:OPT4},
-  {n:44, passage:'p8', type:'single', prompt:'If a barcode cannot be scanned, what should the employee do?', opts:OPT4},
-  {n:45, passage:'p8', type:'single', prompt:'Why does the memorandum state that the first two weeks of supervisor checks are not employee performance evaluations?', opts:OPT4},
+  {n:41, passage:'p8', type:'single', prompt:'What is the main purpose of the memorandum?', opts:[
+    O('A',"To announce that the warehouse is closing"),
+    O('B',"To explain a new procedure for recording incoming merchandise"),
+    O('C',"To evaluate employee performance"),
+    O('D',"To advertise new products")]},
+  {n:42, passage:'p8', type:'single', prompt:'Why was the previous procedure sometimes problematic?', opts:[
+    O('A',"Workers refused to put merchandise on shelves."),
+    O('B',"Delivery drivers damaged every shipment."),
+    O('C',"Merchandise could be physically stored before the computer inventory was updated."),
+    O('D',"The warehouse had no scanners.")]},
+  {n:43, passage:'p8', type:'single', prompt:'A shipment contains 12 containers, but the scanner displays a quantity of 11. What should the employee do before moving the merchandise to storage?', opts:[
+    O('A',"Ignore the difference."),
+    O('B',"Confirm the quantity and resolve the discrepancy according to the procedure."),
+    O('C',"Create a new product number."),
+    O('D',"Send the entire shipment back immediately.")]},
+  {n:44, passage:'p8', type:'single', prompt:'If a barcode cannot be scanned, what should the employee do?', opts:[
+    O('A',"Invent a new product number."),
+    O('B',"Place the item in the review area and notify the inventory coordinator."),
+    O('C',"Move the item directly to its normal shelf."),
+    O('D',"Throw away the barcode.")]},
+  {n:45, passage:'p8', type:'single', prompt:'Why does the memorandum state that the first two weeks of supervisor checks are not employee performance evaluations?', opts:[
+    O('A',"To clarify the purpose of the checks and reduce misunderstanding"),
+    O('B',"To explain why supervisors are being dismissed"),
+    O('C',"To suggest that the procedure is temporary"),
+    O('D',"To announce that no employees need training")]},
   {n:46, passage:'p8', type:'order', prompt:'Put these actions in the correct order according to the memorandum:  A. Move merchandise to storage.  B. Scan each container.  C. Compare the shipment with the delivery record.  D. Confirm the displayed quantity.', placeholder:'e.g. C-B-D-A'}
 ];
 
@@ -727,18 +910,18 @@ function renderQuestionScreen(q, listArr, curIdx) {
     <div class="q-card"><p class="q-prompt">${q.prompt}</p>`;
 
   if (q.type === 'single') {
-    bodyHtml += `<div class="opts-wrap">` + q.opts.map(letter => {
-      const sel = (answers[q.n] === letter);
-      return `<div class="opt-row ${sel?'selected':''}" data-letter="${letter}">
-        <div class="opt-letter">${letter}</div><div class="opt-text">Option ${letter}</div>
+    bodyHtml += `<div class="opts-wrap">` + q.opts.map(o => {
+      const sel = (answers[q.n] === o.letter);
+      return `<div class="opt-row ${sel?'selected':''}" data-letter="${o.letter}">
+        <div class="opt-letter">${o.letter}</div><div class="opt-text">${o.text}</div>
       </div>`;
     }).join('') + `</div>`;
   } else if (q.type === 'multi') {
     const cur = (answers[q.n] || '').split(',').filter(Boolean);
-    bodyHtml += `<div class="opts-wrap">` + q.opts.map(letter => {
-      const sel = cur.includes(letter);
-      return `<div class="opt-row ${sel?'selected':''}" data-letter="${letter}">
-        <div class="opt-letter">${letter}</div><div class="opt-text">Option ${letter}</div>
+    bodyHtml += `<div class="opts-wrap">` + q.opts.map(o => {
+      const sel = cur.includes(o.letter);
+      return `<div class="opt-row ${sel?'selected':''}" data-letter="${o.letter}">
+        <div class="opt-letter">${o.letter}</div><div class="opt-text">${o.text}</div>
       </div>`;
     }).join('') + `</div><div class="hint-text">Select exactly two options.</div>`;
   } else if (q.type === 'order') {
