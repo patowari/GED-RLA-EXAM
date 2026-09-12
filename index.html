@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GED® RLA Mock Exam A</title>
+<style>
+  :root {
+    --navy: #0f2a4a;
+    --navy-dark: #0a1e36;
+    --blue: #1a5fa8;
+    --blue-light: #eaf2fb;
+    --gray-bg: #eef1f4;
+    --border: #c7ccd1;
+    --text: #1c1f22;
+    --text-soft: #55606a;
+    --flag: #c9971f;
+    --answered: #1a7a4c;
+    --white: #ffffff;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    height: 100%;
+    margin: 0;
+    font-family: Arial, Helvetica, "Segoe UI", sans-serif;
+    color: var(--text);
+    background: var(--gray-bg);
+  }
+  #app { display: flex; flex-direction: column; height: 100vh; }
+
+  .topbar {
+    background: var(--navy);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    height: 52px;
+    flex-shrink: 0;
+    font-size: 0.85rem;
+  }
+  .topbar .brand {
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .topbar .brand .badge {
+    background: #fff;
+    color: var(--navy);
+    font-size: 0.7rem;
+    font-weight: 800;
+    padding: 2px 6px;
+    border-radius: 3px;
+  }
+  .topbar .center-info {
+    display: flex;
+    gap: 22px;
+    align-items: center;
+  }
+  .topbar .center-info span.label { color: #9fb3ca; margin-right: 4px; }
+  .topbar button.icon-btn {
+    background: transparent;
+    border: 1px solid #3a5a80;
+    color: #fff;
+    border-radius: 4px;
+    padding: 6px 12px;
+    font-size: 0.8rem;
+    cursor: pointer;
+  }
+  .topbar button.icon-btn:hover { background: #1a3f66; }
+  .topbar button.icon-btn.flagged { background: var(--flag); border-color: var(--flag); color: #2a2100; font-weight: 700; }
+
+  .progress-strip {
+    background: var(--navy-dark);
+    height: 6px;
+    flex-shrink: 0;
+  }
+  .progress-strip-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #3d8ad6, #6fb2ee);
+    transition: width 0.2s ease;
+  }
+
+  .main-area {
+    flex: 1;
+    display: flex;
+    min-height: 0;
+  }
+  .pane { overflow-y: auto; }
+  .passage-pane {
+    width: 50%;
+    background: var(--white);
+    border-right: 3px solid var(--border);
+    padding: 24px 28px 60px;
+  }
+  .passage-pane h2 {
+    font-size: 1.02rem;
+    margin: 0 0 4px;
+    color: var(--navy);
+    border-bottom: 2px solid var(--blue);
+    padding-bottom: 10px;
+  }
+  .passage-pane .byline { font-style: italic; color: var(--text-soft); margin: 10px 0 16px; font-size: 0.9rem; }
+  .passage-pane p { font-size: 0.96rem; line-height: 1.65; margin: 0 0 13px; }
+  .passage-pane .letter { margin: 14px 0; padding-left: 16px; border-left: 3px solid var(--border); font-style: italic; }
+  .passage-pane ol { padding-left: 22px; }
+  .passage-pane ol li { margin-bottom: 8px; font-size: 0.96rem; }
+  .passage-pane strong.subhead { display: block; margin: 18px 0 8px; color: var(--navy); }
+
+  .question-pane {
+    width: 50%;
+    background: var(--gray-bg);
+    padding: 24px 30px 40px;
+    display: flex;
+    flex-direction: column;
+  }
+  .no-passage-note {
+    background: var(--blue-light);
+    border: 1px solid #b9d3ec;
+    color: var(--text-soft);
+    font-size: 0.85rem;
+    padding: 14px 16px;
+    border-radius: 4px;
+    margin-bottom: 16px;
+  }
+  .q-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+  }
+  .q-number-tag {
+    background: var(--navy);
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.85rem;
+    padding: 5px 12px;
+    border-radius: 3px;
+  }
+  .select-two-tag {
+    background: #fff3e0;
+    color: #8a5a00;
+    border: 1px solid #e8c179;
+    font-size: 0.78rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 3px;
+  }
+  .q-card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 22px 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  }
+  .q-prompt {
+    font-size: 1.05rem;
+    line-height: 1.55;
+    margin: 0 0 20px;
+    font-weight: 600;
+  }
+  .opt-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: border-color 0.12s, background 0.12s;
+    background: #fff;
+  }
+  .opt-row:hover { border-color: var(--blue); background: var(--blue-light); }
+  .opt-row.selected { border-color: var(--blue); background: var(--blue-light); }
+  .opt-letter {
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 1.5px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: var(--text-soft);
+    background: #fff;
+  }
+  .opt-row.selected .opt-letter {
+    background: var(--blue);
+    border-color: var(--blue);
+    color: #fff;
+  }
+  .opt-text { font-size: 0.96rem; padding-top: 3px; }
+  .order-input-wrap { margin-top: 4px; }
+  .order-input {
+    width: 100%;
+    font-size: 1rem;
+    padding: 12px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    font-family: "SF Mono", Consolas, monospace;
+  }
+  .order-input:focus { outline: none; border-color: var(--blue); }
+  .hint-text { color: var(--text-soft); font-size: 0.82rem; margin-top: 8px; }
+
+  .bottom-nav {
+    background: var(--white);
+    border-top: 2px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    flex-shrink: 0;
+  }
+  .bottom-nav button {
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: 700;
+    padding: 11px 22px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+  }
+  .nav-btn-primary { background: var(--blue); color: #fff; }
+  .nav-btn-primary:hover { background: #144a85; }
+  .nav-btn-secondary { background: #fff; color: var(--navy); border: 1.5px solid var(--border) !important; }
+  .nav-btn-secondary:hover { background: var(--gray-bg); }
+  .nav-btn-secondary:disabled { opacity: 0.4; cursor: not-allowed; }
+  .palette-btn { background: transparent; color: var(--blue); border: 1.5px solid var(--blue) !important; }
+  .palette-btn:hover { background: var(--blue-light); }
+
+  .overlay {
+    position: fixed; inset: 0;
+    background: rgba(10,20,35,0.55);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+  }
+  .overlay.show { display: flex; }
+  .palette-modal {
+    background: #fff;
+    border-radius: 8px;
+    max-width: 640px;
+    width: 92%;
+    max-height: 82vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .palette-modal-head {
+    background: var(--navy);
+    color: #fff;
+    padding: 16px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .palette-modal-head h3 { margin: 0; font-size: 1rem; }
+  .palette-modal-head button {
+    background: transparent; border: none; color: #fff; font-size: 1.3rem; cursor: pointer;
+  }
+  .palette-grid {
+    padding: 18px 20px;
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+    overflow-y: auto;
+  }
+  .palette-cell {
+    aspect-ratio: 1;
+    border-radius: 4px;
+    border: 1.5px solid var(--border);
+    background: #fff;
+    font-size: 0.82rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+    color: var(--text-soft);
+  }
+  .palette-cell.answered { background: #e5f5ec; border-color: var(--answered); color: var(--answered); }
+  .palette-cell.flagged::after {
+    content: "";
+    position: absolute; top: 3px; right: 3px;
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--flag);
+  }
+  .palette-cell.current { border-color: var(--blue); border-width: 2.5px; }
+  .palette-legend {
+    display: flex; gap: 16px; padding: 0 20px 16px; font-size: 0.78rem; color: var(--text-soft); flex-wrap: wrap;
+  }
+  .palette-legend span { display: flex; align-items: center; gap: 5px; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+
+  .center-screen {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 30px;
+    overflow-y: auto;
+  }
+  .card-box {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    max-width: 640px;
+    width: 100%;
+    padding: 40px 44px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  }
+  .card-box h1 { color: var(--navy); font-size: 1.4rem; margin-top: 0; }
+  .card-box h2 { color: var(--navy); font-size: 1.2rem; }
+  .card-box p { color: var(--text-soft); line-height: 1.6; text-align: left; }
+  .card-box .start-btn {
+    margin-top: 20px;
+    background: var(--blue);
+    color: #fff;
+    border: none;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 13px 30px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  .card-box .start-btn:hover { background: #144a85; }
+
+  .essay-screen {
+    flex: 1;
+    display: flex;
+    min-height: 0;
+  }
+  .essay-left {
+    width: 50%;
+    background: #fff;
+    border-right: 3px solid var(--border);
+    overflow-y: auto;
+    padding: 24px 28px 60px;
+  }
+  .essay-right {
+    width: 50%;
+    background: var(--gray-bg);
+    padding: 24px 30px 20px;
+    display: flex;
+    flex-direction: column;
+  }
+  .essay-right textarea {
+    flex: 1;
+    width: 100%;
+    resize: none;
+    font-family: Arial, sans-serif;
+    font-size: 0.98rem;
+    line-height: 1.6;
+    padding: 16px;
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+  }
+  .essay-right textarea:focus { outline: none; border-color: var(--blue); }
+  .essay-wordcount { text-align: right; font-size: 0.8rem; color: var(--text-soft); margin-top: 6px; }
+
+  .result-box textarea {
+    width: 100%;
+    min-height: 380px;
+    font-family: "SF Mono", Consolas, monospace;
+    font-size: 0.82rem;
+    padding: 16px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: #1c2733;
+    color: #dbe6f0;
+    white-space: pre;
+  }
+  .copied-msg { color: var(--answered); font-weight: 700; font-size: 0.85rem; margin-top: 8px; display: none; }
+
+  ::-webkit-scrollbar { width: 10px; }
+  ::-webkit-scrollbar-thumb { background: #c2c9d1; border-radius: 10px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+
+  @media (max-width: 860px) {
+    .main-area, .essay-screen { flex-direction: column; overflow-y: auto; }
+    .passage-pane, .question-pane, .essay-left, .essay-right { width: 100%; }
+    .passage-pane, .essay-left { border-right: none; border-bottom: 3px solid var(--border); max-height: 45vh; }
+    .topbar .center-info span:not(.qcount) { display: none; }
+  }
+</style>
+</head>
+<body>
+<div id="app">
+
+  <div class="topbar">
+    <div class="brand"><span class="badge">GED®</span> Reasoning Through Language Arts — Mock Exam A</div>
+    <div class="center-info" id="topbarInfo"></div>
+    <button class="icon-btn" id="flagBtn" style="display:none;">⚑ Mark for Review</button>
+  </div>
+  <div class="progress-strip"><div class="progress-strip-fill" id="progressFill" style="width:0%;"></div></div>
+
+  <div id="screenContainer" style="flex:1; display:flex; min-height:0;"></div>
+
+  <div class="bottom-nav" id="bottomNav" style="display:none;">
+    <button class="nav-btn-secondary" id="prevBtn">◀ Previous</button>
+    <button class="palette-btn" id="paletteBtn">☰ Question Navigator</button>
+    <button class="nav-btn-primary" id="nextBtn">Next ▶</button>
+  </div>
+</div>
+
+<div class="overlay" id="paletteOverlay">
+  <div class="palette-modal">
+    <div class="palette-modal-head">
+      <h3 id="paletteTitle">Question Navigator</h3>
+      <button id="paletteClose">&times;</button>
+    </div>
+    <div class="palette-legend">
+      <span><span class="legend-dot" style="background:#e5f5ec;border:1.5px solid #1a7a4c;"></span> Answered</span>
+      <span><span class="legend-dot" style="background:#fff;border:1.5px solid #c7ccd1;"></span> Unanswered</span>
+      <span><span class="legend-dot" style="background:#c9971f;"></span> Flagged</span>
+    </div>
+    <div class="palette-grid" id="paletteGrid"></div>
+  </div>
+</div>
+
+<script>
+const PASSAGES = {
+  p1: {
+    title: "Passage 1 — The Key on the Counter (Literary)",
+    html: `
+      <p>When Elena arrived at her uncle's repair shop on Saturday morning, the front door was already unlocked. This surprised her. Uncle Tomas was known for arriving exactly fifteen minutes before opening, never sixteen and certainly never twenty.</p>
+      <p>Inside, however, the shop was silent.</p>
+      <p>Elena placed her backpack behind the counter and called his name. No answer came from the narrow room where radios, clocks, lamps, and other objects waited in various stages of repair.</p>
+      <p>She noticed a brass key lying beside the cash register.</p>
+      <p>For as long as Elena could remember, the key had hung from a chain on her uncle's belt. It opened the tall wooden cabinet at the back of the shop. When Elena was a child, she had imagined the cabinet contained expensive watches or secret documents. Eventually she learned that it mostly held old account books, instruction manuals, and spare parts that Tomas insisted were "too useful to throw away."</p>
+      <p>A note lay beneath the key.</p>
+      <div class="letter">
+        <p>Elena—</p>
+        <p>Mrs. Alvarez will collect her clock at ten. Mr. Chen's radio needs one final test. The invoices are in the blue folder.</p>
+        <p>You know where everything is.</p>
+        <p>T.</p>
+      </div>
+      <p>Elena read the final sentence twice.</p>
+      <p>She had worked at the shop for nearly three years after school and on weekends. She could replace cracked electrical cords, identify worn gears, and explain to impatient customers why some repairs required days instead of hours. Still, her uncle had always inspected her work before anything left the shop.</p>
+      <p>"You know where everything is," she whispered.</p>
+      <p>At nine thirty, the bell above the door rang.</p>
+      <p>A man entered carrying a desk lamp. Elena recognized him as Mr. Patel, who owned the bakery two streets away.</p>
+      <p>"Morning," he said. "Tomas here?"</p>
+      <p>"Not yet."</p>
+      <p>Mr. Patel placed the lamp on the counter. "It flickers whenever I move the cord. He told me to bring it by."</p>
+      <p>Elena looked at the lamp. She had repaired the same problem many times.</p>
+      <p>Normally she would attach a tag and place the lamp on Tomas's workbench. Instead she picked up a screwdriver.</p>
+      <p>Mr. Patel raised an eyebrow. "You've been promoted?"</p>
+      <p>Elena smiled uncertainly. "Maybe."</p>
+      <p>She examined the cord and found a break near the base. Twenty minutes later, she plugged in the lamp and moved the cord back and forth. The light remained steady.</p>
+      <p>At ten, Mrs. Alvarez arrived. Elena handed her the repaired clock, accepted payment, and wrote out the receipt.</p>
+      <p>At ten fifteen, Elena heard familiar footsteps outside.</p>
+      <p>Tomas entered carrying two cups of coffee.</p>
+      <p>"You were late," Elena said.</p>
+      <p>"I was."</p>
+      <p>"You left the key."</p>
+      <p>"I did."</p>
+      <p>"And you knew Mr. Patel might come."</p>
+      <p>Tomas placed one cup in front of her. "I suspected he would."</p>
+      <p>Elena stared at him.</p>
+      <p>"So this was a test?"</p>
+      <p>Tomas considered the question. "Would that make you angry?"</p>
+      <p>Elena looked toward the workbench. Mr. Patel's lamp stood there, glowing steadily.</p>
+      <p>"No," she said. "But next time, at least leave breakfast."</p>
+      <p>Tomas laughed and slid a paper bag across the counter.</p>
+      <p>"I did."</p>`
+  },
+  p2: {
+    title: "Passage 2 — Should the Town Replace Its Streetlights?",
+    html: `
+      <p>The town of Fairmont is considering replacing approximately 2,400 traditional streetlights with light-emitting diode, or LED, fixtures. Supporters of the proposal argue that LEDs would lower electricity use and reduce maintenance costs. Critics agree that LEDs consume less energy but question whether replacing working equipment immediately is the best use of public funds.</p>
+      <p>According to a report prepared by the town's engineering department, Fairmont spends about $310,000 each year on electricity for street lighting. The department estimates that new LED fixtures could reduce electricity consumption for streetlights by roughly 45 percent. Because LED bulbs generally last longer than the lamps currently in use, the report also predicts fewer maintenance visits.</p>
+      <p>The proposed conversion would cost approximately $1.8 million. Town officials estimate that lower electricity and maintenance expenses would recover that initial cost in about eight years. After that period, supporters say, the town could continue benefiting from lower annual expenses.</p>
+      <p>Council member Rina Flores supports the project. She notes that the town already replaces approximately 180 failed streetlights each year. "We are spending money to maintain an older system whether we modernize it or not," Flores said during a council meeting. She also argues that the town could install LED fixtures that direct light more precisely toward streets and sidewalks, reducing unnecessary light that shines into nearby homes.</p>
+      <p>Opponents are not convinced that the entire system should be replaced at once. Council member Marcus Lee has proposed a gradual approach. Under his plan, the town would install LEDs only when existing lights fail or when streets undergo major construction.</p>
+      <p>"Energy efficiency is important," Lee said, "but a working light does not become waste simply because a newer technology exists."</p>
+      <p>Lee also questions the engineering department's eight-year estimate. Electricity prices, maintenance costs, and equipment performance could change. If savings are smaller than expected, recovering the original investment could take longer.</p>
+      <p>Flores responds that waiting also carries financial risks. If electricity prices rise, the town would continue paying to operate less efficient fixtures. Furthermore, replacing lights gradually might prevent Fairmont from negotiating a lower price for purchasing thousands of fixtures at once.</p>
+      <p>Both proposals would eventually increase the number of LED streetlights in Fairmont. The central disagreement is therefore not whether LEDs offer advantages, but how quickly the town should invest in them.</p>`
+  },
+  p3: {
+    title: "Passage 3 — Editing: Riverside Youth Center",
+    html: `<p>(1) The Riverside Youth Center recently started a weekend tutoring program. (2) Volunteers helps middle-school students with mathematics, science, and writing. (3) The program began with only eight students; however, more than thirty students now attend each Saturday. (4) Because attendance has increased. (5) The center plans to recruit additional volunteers next month. (6) New volunteers will receive training, they will also receive lesson materials.</p>`
+  },
+  essayAB: {
+    title: "Extended Response Passages",
+    html: `
+      <strong class="subhead">Passage A — Remote Work Should Remain an Option for City Employees</strong>
+      <p class="byline">By Carla Mendes, Director of Workforce Innovation</p>
+      <p>Three years of workplace data show that eligible city employees should continue to have the option to work remotely two days per week.</p>
+      <p>Before the remote-work program began, some managers worried that productivity would decline when employees were away from the office. That prediction has not been supported by the city's internal performance reports. Across six departments participating in the program, the average number of completed service requests per employee increased by 7 percent compared with the year before the program began.</p>
+      <p>Remote work has also helped the city retain employees. Human Resources reports that annual turnover in participating departments declined from 14 percent to 9 percent. Replacing experienced employees is expensive because the city must advertise positions, interview candidates, conduct background checks, and train new workers. Reducing turnover therefore saves both time and money.</p>
+      <p>The program also appears to reduce demand for office space. Two departments have already consolidated floors in municipal buildings because fewer employees are present simultaneously. The city estimates that these changes reduced annual utility and maintenance expenses by approximately $240,000.</p>
+      <p>Some critics point out that not every city employee can work remotely. Police officers, maintenance crews, bus operators, and many other workers must be physically present. This is true, but equal treatment does not always require identical working conditions. Different jobs already have different schedules, equipment, and workplace requirements.</p>
+      <p>Remote work should therefore remain available only for positions that managers determine can perform effectively outside the office.</p>
+      <p>The city should continue measuring productivity and public-service quality. If a department's performance declines, its remote-work policy can be adjusted. Eliminating a program that has produced measurable benefits, however, would ignore the evidence collected during the past three years.</p>
+      <strong class="subhead">Passage B — City Employees Serve the Public Best From City Offices</strong>
+      <p class="byline">By Thomas Greer, President of Citizens for Accessible Government</p>
+      <p>The city should end its broad remote-work policy and require employees to work primarily from municipal offices.</p>
+      <p>Government exists to serve residents. When residents visit a public office with a complicated permit, tax, or housing question, they should be able to speak directly with knowledgeable staff. A government office with many empty desks can create the impression that public employees are unavailable, even if those employees are working elsewhere.</p>
+      <p>Remote communication is not always an adequate replacement for face-to-face service. Some residents have limited internet access or are uncomfortable using online systems. Older residents in particular may prefer discussing difficult paperwork with a person rather than through email or video calls.</p>
+      <p>Supporters of remote work point to productivity statistics, but the number of completed requests does not necessarily measure service quality. An employee might close more digital requests while spending less time assisting residents with complicated cases. The city should be careful about treating quantity as if it were the same as quality.</p>
+      <p>Furthermore, employees benefit from informal communication with coworkers. A short conversation between experienced staff members may solve a problem faster than scheduling an online meeting or sending several messages. New employees can also learn by observing experienced coworkers.</p>
+      <p>Businesses throughout the city have returned many employees to physical workplaces. Government should demonstrate the same commitment to serving people in person.</p>
+      <p>Remote work may be appropriate during emergencies or for unusual circumstances, but it should not become the standard arrangement for public employees. Residents fund city government through their taxes, and they deserve offices that are fully staffed and accessible.</p>`
+  },
+  p4: {
+    title: "Passage 4 — From Storage Room to Workshop",
+    html: `
+      <p>For decades, the basement of the Westbridge Public Library was used primarily for storage. Rows of metal shelves held outdated furniture, boxes of tax forms, and equipment that employees rarely needed. In 2024, however, library administrators converted part of the basement into what they called a "makerspace"—a shared workshop where residents can use tools and equipment to create projects.</p>
+      <p>The makerspace began modestly with two sewing machines, basic woodworking tools, and several computers equipped with design software. Within six months, the library added a small 3-D printer after a local engineering company donated funds.</p>
+      <p>Library director Sonia Park says the goal is not simply to provide expensive equipment.</p>
+      <p>"A library has always helped people gain access to resources they might not own themselves," Park explains. "For generations, that resource was mostly books. Today it can also mean technology, tools, and instruction."</p>
+      <p>The makerspace offers scheduled classes as well as open workshop hours. In one class, participants learn to repair damaged clothing. Another teaches basic computer-assisted design. Volunteers from a local technical college supervise some sessions.</p>
+      <p>Demand has been stronger than administrators expected. According to library records, approximately 90 residents used the makerspace during its first month. By the sixth month, monthly participation had risen to more than 260.</p>
+      <p>Yet the program has also produced challenges. Equipment requires maintenance, instructors must be available, and safety rules limit the number of people who can use certain tools simultaneously.</p>
+      <p>Some residents question whether these activities belong in a library at all.</p>
+      <p>"A library should focus on books and literacy," said resident Arthur Bell at a public meeting. "There are already schools and businesses that teach technical skills."</p>
+      <p>Park argues that the makerspace supports literacy rather than competing with it. Participants frequently consult instruction manuals, online reference materials, and design guides while completing projects. She also points to workshops where participants create résumés, learn spreadsheet software, or receive help with online employment applications.</p>
+      <p>Researchers who study public libraries say Westbridge is part of a broader shift. Many libraries have expanded beyond lending books to provide internet access, meeting rooms, job-search assistance, language classes, and creative technology.</p>
+      <p>Professor Lila Warren, who studies information services, cautions against assuming that every new service is automatically worthwhile.</p>
+      <p>"Libraries have limited budgets," Warren says. "The important question is not whether a program is modern or exciting. The question is whether it advances the institution's mission and serves needs that are not being adequately met elsewhere."</p>
+      <p>Westbridge administrators say they will evaluate the makerspace after its first full year. They will examine participation, costs, equipment use, and surveys from residents. The results will help determine whether the library expands the program, keeps it at its current size, or redirects funding to other services.</p>`
+  },
+  p5: {
+    title: "Passage 5 — The Clockmaker's Window",
+    html: `
+      <p>Every afternoon after school, Jonah passed Mr. Vale's clock shop. The window displayed clocks of every shape: square travel clocks, polished wooden mantel clocks, silver watches, and one enormous clock whose pendulum swung behind a glass door.</p>
+      <p>Jonah rarely entered. The shop seemed to demand silence, and silence made him uncomfortable.</p>
+      <p>One rainy Thursday, however, Jonah noticed a handwritten sign: <strong>HELP WANTED — SATURDAYS</strong></p>
+      <p>He stood beneath his umbrella for almost a minute.</p>
+      <p>Jonah had been saving for a used bicycle. His mother had offered to pay half, but he wanted to earn the rest himself.</p>
+      <p>He pushed open the door.</p>
+      <p>Dozens of clocks ticked at slightly different speeds. The combined sound reminded Jonah of rain striking windows.</p>
+      <p>Mr. Vale looked up from his workbench.</p>
+      <p>"Yes?"</p>
+      <p>Jonah pointed toward the sign.</p>
+      <p>"How old are you?"</p>
+      <p>"Sixteen."</p>
+      <p>"Know anything about clocks?"</p>
+      <p>"No."</p>
+      <p>"Tools?"</p>
+      <p>"A little."</p>
+      <p>Mr. Vale removed his glasses. "Can you sweep?"</p>
+      <p>Jonah frowned. "Obviously."</p>
+      <p>"Excellent. Most applicants begin by claiming they can repair clocks."</p>
+      <p>The following Saturday, Jonah swept the floor.</p>
+      <p>Then he dusted shelves.</p>
+      <p>Then he sorted screws into tiny labeled drawers.</p>
+      <p>By noon, he was certain that Mr. Vale had no intention of teaching him anything interesting.</p>
+      <p>At twelve thirty, Mr. Vale placed a broken alarm clock on the workbench.</p>
+      <p>"Open it."</p>
+      <p>Jonah tried to hide his surprise.</p>
+      <p>He removed the back plate. Inside, wheels and springs crowded together in a complicated arrangement.</p>
+      <p>"What is wrong with it?" Mr. Vale asked.</p>
+      <p>"I don't know."</p>
+      <p>"Good."</p>
+      <p>Jonah looked at him.</p>
+      <p>"'I don't know' is useful," Mr. Vale said. "It gives you somewhere to begin."</p>
+      <p>For the next hour, Mr. Vale asked questions but gave few answers.</p>
+      <p>Which gear moved when Jonah turned the adjustment knob? Which spring stored tension? What changed when Jonah moved one lever?</p>
+      <p>Eventually Jonah noticed that one small gear failed to engage with the next.</p>
+      <p>"This one isn't reaching."</p>
+      <p>Mr. Vale nodded.</p>
+      <p>Jonah adjusted the gear carefully and wound the clock.</p>
+      <p>Nothing happened.</p>
+      <p>His excitement disappeared.</p>
+      <p>Mr. Vale said nothing.</p>
+      <p>Jonah opened the clock again.</p>
+      <p>Ten minutes later, he discovered that he had reinstalled a spring backward.</p>
+      <p>This time, when he wound the clock, the mechanism began to tick.</p>
+      <p>Jonah grinned.</p>
+      <p>Mr. Vale returned to his own workbench.</p>
+      <p>"That's it?"</p>
+      <p>"What else were you expecting?"</p>
+      <p>"I fixed it."</p>
+      <p>"You corrected two problems after creating one of them yourself."</p>
+      <p>Jonah's grin faded.</p>
+      <p>Then Mr. Vale looked over his glasses.</p>
+      <p>"Which is how most repairs are learned."</p>
+      <p>At closing time, Jonah stepped onto the sidewalk. The rain had stopped.</p>
+      <p>He looked back through the shop window. For years, the clocks had seemed like finished objects, mysterious and perfect behind glass.</p>
+      <p>Now Jonah imagined their backs removed, their gears exposed, each mechanism understandable one piece at a time.</p>`
+  },
+  p6: {
+    title: "Passage 6 — Later School Start Times (Paired Arguments)",
+    html: `
+      <strong class="subhead">Passage A: Later School Start Times Improve Learning</strong>
+      <p>Research on adolescent sleep strongly supports starting high school later in the morning. Teenagers experience biological changes that tend to make them fall asleep later than younger children and adults. Requiring them to arrive at school extremely early can therefore reduce the amount of sleep they receive.</p>
+      <p>In one district that moved its high-school start time from 7:20 a.m. to 8:30 a.m., student attendance improved during the following year. The district also reported fewer first-period absences and fewer students arriving late.</p>
+      <p>Sleep affects more than attendance. Studies have associated adequate sleep with attention, memory, and emotional regulation. A student who is physically present but exhausted may struggle to concentrate during early classes.</p>
+      <p>Critics argue that later school schedules interfere with sports, jobs, and transportation. Those concerns are legitimate, but schedules can be redesigned. Athletic practices can begin later, and bus routes can be adjusted over time.</p>
+      <p>Schools organize schedules to support education. If evidence shows that students learn better when they are more rested, school schedules should reflect that evidence rather than tradition.</p>
+      <strong class="subhead">Passage B: Changing Start Times Creates Serious Practical Problems</strong>
+      <p>Calls for later high-school start times focus heavily on sleep while paying insufficient attention to how school schedules affect entire communities.</p>
+      <p>Many districts use the same buses for elementary, middle, and high-school students. Moving high school later may require moving younger students earlier or purchasing additional buses. Both options can create problems. Additional buses cost money, while very early elementary schedules may inconvenience families with young children.</p>
+      <p>Later dismissal can also interfere with athletics, part-time jobs, and family responsibilities. Some students care for younger siblings after school. Others depend on afternoon employment.</p>
+      <p>Supporters frequently say these schedules can simply be "adjusted," but adjusting them may shift problems from one group to another.</p>
+      <p>Furthermore, later school opening does not guarantee that teenagers will sleep longer. Students may simply stay awake later because they know they can wake up later.</p>
+      <p>Districts should encourage healthy sleep habits before reorganizing transportation, athletics, employment schedules, and family routines. Local communities should examine their own circumstances instead of assuming that one schedule works everywhere.</p>`
+  },
+  p7: {
+    title: "Passage 7 — Editing: Oakview Community Garden",
+    html: `
+      <p>(1) Last spring, volunteers in Oakview transformed an unused lot into a community garden. (2) The property had been empty for more than ten years, weeds and trash covered much of the ground. (3) Before planting anything, volunteers removed debris and tested the soil. (4) The soil was safe for gardening, however, it needed additional nutrients. (5) Local businesses donated compost and tools. (6) A landscaping company also provided wooden boards to build raised garden beds.</p>
+      <p>(7) Today, twenty-four families maintains individual plots in the garden. (8) Another section is used to grow vegetables for a neighborhood food pantry. (9) Volunteers have harvested more than 400 pounds of produce during the gardens first season. (10) In addition to producing food, the garden has become a gathering place. (11) Residents hold monthly workshops there on composting, cooking, and plant care.</p>
+      <p>(12) The project has experienced some difficulties. (13) During a dry period in July, volunteers had to carry water from a nearby building. (14) Therefore, organizers are currently seeking funding for a permanent water connection. (15) If the funding is approved the connection could be installed before next summer.</p>`
+  },
+  p8: {
+    title: "Passage 8 — Workplace Memorandum: Inventory Scanning",
+    html: `
+      <p><strong>MEMORANDUM</strong><br>To: Warehouse Employees<br>From: Operations Manager<br>Subject: New Inventory Scanning Procedure</p>
+      <p>Beginning October 5, all incoming merchandise must be scanned before it is moved from the receiving area to storage.</p>
+      <p>Under the previous procedure, employees sometimes moved merchandise to shelves before entering it into the inventory system. Although this allowed receiving areas to be cleared quickly, it occasionally caused temporary differences between the amount of merchandise physically present and the amount shown in the computer system.</p>
+      <p>The new procedure is as follows:</p>
+      <ol>
+        <li>When merchandise arrives, compare the shipment with the delivery record.</li>
+        <li>Report damaged or missing items to the shift supervisor before scanning the shipment.</li>
+        <li>Scan the barcode on each container.</li>
+        <li>Confirm that the quantity displayed on the scanner matches the quantity received.</li>
+        <li>Move the merchandise to its assigned storage location.</li>
+      </ol>
+      <p>If a barcode cannot be scanned, do not manually create a new product number. Place the item in the marked review area and notify the inventory coordinator.</p>
+      <p>During the first two weeks of the new procedure, supervisors will conduct brief checks at the end of each shift. These checks are intended to identify problems with the process and provide additional training where necessary. They are not employee performance evaluations.</p>
+      <p>Employees who have questions should first consult the instruction card attached to each scanner. If the instruction card does not solve the problem, contact the shift supervisor.</p>`
+  }
+};
+
+const OPT4 = ['A','B','C','D'];
+const OPT5 = ['A','B','C','D','E'];
+
+const QUESTIONS = [
+  {n:1, passage:'p1', type:'single', prompt:'Why does Elena read the sentence "You know where everything is" twice?', opts:OPT4},
+  {n:2, passage:'p1', type:'single', prompt:"Which detail best supports the idea that Tomas trusts Elena's abilities?", opts:OPT4},
+  {n:3, passage:'p1', type:'single', prompt:'What can readers infer about why Tomas arrives late?', opts:OPT4},
+  {n:4, passage:'p1', type:'multi', prompt:'Which TWO details show that Elena becomes more confident during the passage?', opts:OPT5},
+  {n:5, passage:'p1', type:'single', prompt:'Mr. Patel\'s question "You\'ve been promoted?" mainly serves to', opts:OPT4},
+  {n:6, passage:'p1', type:'single', prompt:'Which statement best expresses a theme of the passage?', opts:OPT4},
+
+  {n:7, passage:'p2', type:'single', prompt:'What is the central issue discussed in the passage?', opts:OPT4},
+  {n:8, passage:'p2', type:'single', prompt:"Which evidence most strongly supports Flores's argument that replacing the lights could reduce town expenses?", opts:OPT4},
+  {n:9, passage:'p2', type:'single', prompt:'Why does the author include Lee\'s statement that "a working light does not become waste simply because a newer technology exists"?', opts:OPT4},
+  {n:10, passage:'p2', type:'single', prompt:"Which assumption is most important to the engineering department's prediction that the project will recover its cost in about eight years?", opts:OPT4},
+  {n:11, passage:'p2', type:'multi', prompt:'Which TWO statements describe points on which Flores and Lee agree?', opts:OPT5},
+
+  {n:12, passage:'p3', type:'single', prompt:'Which change should be made to sentence 2?', opts:OPT4},
+  {n:13, passage:'p3', type:'single', prompt:'What is the best way to revise sentences 4 and 5?', opts:OPT4},
+  {n:14, passage:'p3', type:'single', prompt:'Which revision best corrects sentence 6?', opts:OPT4},
+
+  {n:15, passage:'p4', type:'single', prompt:'What is the main idea of the passage?', opts:OPT4},
+  {n:16, passage:'p4', type:'single', prompt:'Why does the author include the increase from 90 users to more than 260 users per month?', opts:OPT4},
+  {n:17, passage:'p4', type:'single', prompt:"Which statement best describes Arthur Bell's position?", opts:OPT4},
+  {n:18, passage:'p4', type:'single', prompt:'How does Park respond to the criticism that makerspaces do not belong in libraries?', opts:OPT4},
+  {n:19, passage:'p4', type:'single', prompt:"Professor Warren's comments mainly serve to", opts:OPT4},
+  {n:20, passage:'p4', type:'multi', prompt:'Which TWO pieces of information would be most useful when deciding whether to continue funding the makerspace?', opts:OPT5},
+  {n:21, passage:'p4', type:'single', prompt:'Which conclusion is best supported by the passage?', opts:OPT4},
+
+  {n:22, passage:'p5', type:'single', prompt:'At the beginning of the passage, why does Jonah hesitate before entering the shop?', opts:OPT4},
+  {n:23, passage:'p5', type:'single', prompt:'Mr. Vale\'s statement "\'I don\'t know\' is useful" suggests that he believes', opts:OPT4},
+  {n:24, passage:'p5', type:'single', prompt:'Why does the author describe Jonah sorting screws and sweeping before allowing him to work on a clock?', opts:OPT4},
+  {n:25, passage:'p5', type:'single', prompt:"Which event is the turning point in Jonah's attitude toward the job?", opts:OPT4},
+  {n:26, passage:'p5', type:'single', prompt:"What can readers infer about Mr. Vale's teaching style?", opts:OPT4},
+  {n:27, passage:'p5', type:'single', prompt:'The final paragraph mainly shows that Jonah', opts:OPT4},
+
+  {n:28, passage:'p6', type:'single', prompt:'What is the primary claim of Passage A?', opts:OPT4},
+  {n:29, passage:'p6', type:'single', prompt:'Which evidence in Passage A is most relevant to the claim?', opts:OPT4},
+  {n:30, passage:'p6', type:'single', prompt:'What concern does Passage B raise about the evidence connecting later starts with more sleep?', opts:OPT4},
+  {n:31, passage:'p6', type:'single', prompt:'Which statement identifies a weakness in Passage B?', opts:OPT4},
+  {n:32, passage:'p6', type:'multi', prompt:'Which TWO concerns are mentioned in both passages?', opts:OPT5},
+  {n:33, passage:'p6', type:'single', prompt:'How do the authors differ in their treatment of scheduling problems?', opts:OPT4},
+  {n:34, passage:'p6', type:'single', prompt:'Which additional evidence would most strengthen Passage A?', opts:OPT4},
+
+  {n:35, passage:'p7', type:'single', prompt:'What is the best revision of sentence 2?', opts:OPT4},
+  {n:36, passage:'p7', type:'single', prompt:'What is the best revision of sentence 4?', opts:OPT4},
+  {n:37, passage:'p7', type:'single', prompt:'Which change should be made to sentence 7?', opts:OPT4},
+  {n:38, passage:'p7', type:'single', prompt:'Which change should be made to sentence 9?', opts:OPT4},
+  {n:39, passage:'p7', type:'single', prompt:'What is the function of "Therefore" in sentence 14?', opts:OPT4},
+  {n:40, passage:'p7', type:'single', prompt:'Which revision correctly punctuates sentence 15?', opts:OPT4},
+
+  {n:41, passage:'p8', type:'single', prompt:'What is the main purpose of the memorandum?', opts:OPT4},
+  {n:42, passage:'p8', type:'single', prompt:'Why was the previous procedure sometimes problematic?', opts:OPT4},
+  {n:43, passage:'p8', type:'single', prompt:'A shipment contains 12 containers, but the scanner displays a quantity of 11. What should the employee do before moving the merchandise to storage?', opts:OPT4},
+  {n:44, passage:'p8', type:'single', prompt:'If a barcode cannot be scanned, what should the employee do?', opts:OPT4},
+  {n:45, passage:'p8', type:'single', prompt:'Why does the memorandum state that the first two weeks of supervisor checks are not employee performance evaluations?', opts:OPT4},
+  {n:46, passage:'p8', type:'order', prompt:'Put these actions in the correct order according to the memorandum:  A. Move merchandise to storage.  B. Scan each container.  C. Compare the shipment with the delivery record.  D. Confirm the displayed quantity.', placeholder:'e.g. C-B-D-A'}
+];
+
+const part1 = QUESTIONS.filter(q => q.n <= 14);
+const part3 = QUESTIONS.filter(q => q.n >= 15);
+
+let screen = 'intro';
+let idx1 = 0, idx3 = 0;
+const answers = {};
+const flags = {};
+let essayText = '';
+
+const screenContainer = document.getElementById('screenContainer');
+const bottomNav = document.getElementById('bottomNav');
+const topbarInfo = document.getElementById('topbarInfo');
+const flagBtn = document.getElementById('flagBtn');
+const progressFill = document.getElementById('progressFill');
+
+function renderQuestionScreen(q, listArr, curIdx) {
+  screenContainer.innerHTML = `
+    <div class="main-area">
+      <div class="pane passage-pane" id="passagePane"></div>
+      <div class="pane question-pane" id="questionPane"></div>
+    </div>`;
+  const passagePane = document.getElementById('passagePane');
+  const questionPane = document.getElementById('questionPane');
+
+  if (q.passage) {
+    const p = PASSAGES[q.passage];
+    passagePane.innerHTML = `<h2>${p.title}</h2>${p.html}`;
+  } else {
+    passagePane.innerHTML = `<div class="no-passage-note">No passage for this item.</div>`;
+  }
+
+  let selectTag = q.type === 'multi' ? `<span class="select-two-tag">SELECT TWO</span>` : '';
+  let bodyHtml = `<div class="q-header"><span class="q-number-tag">Question ${q.n}</span>${selectTag}</div>
+    <div class="q-card"><p class="q-prompt">${q.prompt}</p>`;
+
+  if (q.type === 'single') {
+    bodyHtml += `<div class="opts-wrap">` + q.opts.map(letter => {
+      const sel = (answers[q.n] === letter);
+      return `<div class="opt-row ${sel?'selected':''}" data-letter="${letter}">
+        <div class="opt-letter">${letter}</div><div class="opt-text">Option ${letter}</div>
+      </div>`;
+    }).join('') + `</div>`;
+  } else if (q.type === 'multi') {
+    const cur = (answers[q.n] || '').split(',').filter(Boolean);
+    bodyHtml += `<div class="opts-wrap">` + q.opts.map(letter => {
+      const sel = cur.includes(letter);
+      return `<div class="opt-row ${sel?'selected':''}" data-letter="${letter}">
+        <div class="opt-letter">${letter}</div><div class="opt-text">Option ${letter}</div>
+      </div>`;
+    }).join('') + `</div><div class="hint-text">Select exactly two options.</div>`;
+  } else if (q.type === 'order') {
+    bodyHtml += `<div class="order-input-wrap">
+      <input type="text" class="order-input" id="orderInput" placeholder="${q.placeholder}" value="${answers[q.n] || ''}">
+      <div class="hint-text">Type four letters separated by dashes, e.g. C-B-D-A</div>
+    </div>`;
+  }
+  bodyHtml += `</div>`;
+  questionPane.innerHTML = bodyHtml;
+
+  if (q.type === 'single') {
+    questionPane.querySelectorAll('.opt-row').forEach(row => {
+      row.addEventListener('click', () => {
+        answers[q.n] = row.dataset.letter;
+        renderCurrent();
+      });
+    });
+  } else if (q.type === 'multi') {
+    questionPane.querySelectorAll('.opt-row').forEach(row => {
+      row.addEventListener('click', () => {
+        let cur = (answers[q.n] || '').split(',').filter(Boolean);
+        const letter = row.dataset.letter;
+        if (cur.includes(letter)) {
+          cur = cur.filter(l => l !== letter);
+        } else {
+          if (cur.length >= 2) cur.shift();
+          cur.push(letter);
+        }
+        answers[q.n] = cur.join(',');
+        renderCurrent();
+      });
+    });
+  } else if (q.type === 'order') {
+    const input = document.getElementById('orderInput');
+    input.addEventListener('input', () => {
+      answers[q.n] = input.value.trim();
+      updateProgressBar();
+    });
+  }
+
+  const total = listArr.length;
+  topbarInfo.innerHTML = `<span class="qcount"><span class="label">Question</span>${curIdx+1} of ${total}</span><span><span class="label">Section</span>${q.n<=14?'Part 1':'Part 3'}</span>`;
+  flagBtn.style.display = 'inline-block';
+  flagBtn.classList.toggle('flagged', !!flags[q.n]);
+  flagBtn.textContent = flags[q.n] ? '⚑ Marked for Review' : '⚑ Mark for Review';
+
+  bottomNav.style.display = 'flex';
+  document.getElementById('prevBtn').disabled = (curIdx === 0);
+  const nextBtn = document.getElementById('nextBtn');
+  const isLast = curIdx === listArr.length - 1;
+  nextBtn.textContent = isLast ? 'Review & Continue ▶' : 'Next ▶';
+
+  updateProgressBar();
+}
+
+function updateProgressBar() {
+  const answeredCount = QUESTIONS.filter(q => answers[q.n] && answers[q.n].length > 0).length;
+  const pct = Math.round((answeredCount / QUESTIONS.length) * 100);
+  progressFill.style.width = pct + '%';
+}
+
+function renderCurrent() {
+  if (screen === 'part1') renderQuestionScreen(part1[idx1], part1, idx1);
+  else if (screen === 'part3') renderQuestionScreen(part3[idx3], part3, idx3);
+}
+
+function renderCenterScreen(html) {
+  bottomNav.style.display = 'none';
+  flagBtn.style.display = 'none';
+  topbarInfo.innerHTML = '';
+  screenContainer.innerHTML = `<div class="center-screen"><div class="card-box">${html}</div></div>`;
+}
+
+function showIntro() {
+  screen = 'intro';
+  renderCenterScreen(`
+    <h1>GED® RLA Full Mock Exam A</h1>
+    <p>This test has three parts: Part 1 (14 questions), the Extended Response essay, and Part 3 (32 questions). Read each passage on the left, then answer the question on the right. Use <strong>Mark for Review</strong> to flag questions you want to revisit, and the <strong>Question Navigator</strong> to jump between items.</p>
+    <p>When you finish everything, you'll get a formatted text block to copy and send for grading.</p>
+    <button class="start-btn" id="startBtn">Begin Part 1 ▶</button>
+  `);
+  document.getElementById('startBtn').addEventListener('click', () => {
+    screen = 'part1'; idx1 = 0; renderCurrent();
+  });
+}
+
+function showPart1Review() {
+  screen = 'part1review';
+  const answeredCount = part1.filter(q => answers[q.n] && answers[q.n].length>0).length;
+  renderCenterScreen(`
+    <h2>End of Part 1</h2>
+    <p>You answered ${answeredCount} of 14 questions. You can go back to review Part 1, or continue to the Extended Response.</p>
+    <button class="start-btn" id="reviewBtn" style="background:#fff;color:var(--blue);border:1.5px solid var(--blue);margin-right:10px;">Review Part 1</button>
+    <button class="start-btn" id="continueBtn">Continue to Extended Response ▶</button>
+  `);
+  document.getElementById('reviewBtn').addEventListener('click', () => { screen='part1'; idx1=0; renderCurrent(); });
+  document.getElementById('continueBtn').addEventListener('click', showEssayIntro);
+}
+
+function showEssayIntro() {
+  screen = 'essayintro';
+  renderCenterScreen(`
+    <h2>Part 2 — Extended Response</h2>
+    <p>Read Passage A and Passage B, then write an essay explaining which position is better supported. Use evidence from both passages, explain why one argument is stronger, and discuss weaknesses in the opposing argument.</p>
+    <button class="start-btn" id="essayStartBtn">Begin Essay ▶</button>
+  `);
+  document.getElementById('essayStartBtn').addEventListener('click', showEssay);
+}
+
+function showEssay() {
+  screen = 'essay';
+  bottomNav.style.display = 'none';
+  flagBtn.style.display = 'none';
+  topbarInfo.innerHTML = `<span>Part 2 — Extended Response</span>`;
+  screenContainer.innerHTML = `
+    <div class="essay-screen">
+      <div class="essay-left"><h2>${PASSAGES.essayAB.title}</h2>${PASSAGES.essayAB.html}</div>
+      <div class="essay-right">
+        <textarea id="essayTextarea" placeholder="Type your essay here...">${essayText}</textarea>
+        <div class="essay-wordcount" id="wordCount">0 words</div>
+        <div class="bottom-nav" style="margin-top:12px; border-top:none; padding:0;">
+          <button class="nav-btn-primary" id="essayDoneBtn" style="margin-left:auto;">Continue ▶</button>
+        </div>
+      </div>
+    </div>`;
+  const ta = document.getElementById('essayTextarea');
+  const wc = document.getElementById('wordCount');
+  function updateWc() {
+    const words = ta.value.trim().split(/\s+/).filter(Boolean).length;
+    wc.textContent = words + ' words';
+  }
+  updateWc();
+  ta.addEventListener('input', () => { essayText = ta.value; updateWc(); });
+  document.getElementById('essayDoneBtn').addEventListener('click', showBreak);
+}
+
+function showBreak() {
+  screen = 'breakscreen';
+  renderCenterScreen(`
+    <h2>Break</h2>
+    <p>On the real GED, this is a 10-minute break. Take one now if you'd like, then continue to Part 3 (32 questions).</p>
+    <button class="start-btn" id="part3StartBtn">Begin Part 3 ▶</button>
+  `);
+  document.getElementById('part3StartBtn').addEventListener('click', () => { screen='part3'; idx3=0; renderCurrent(); });
+}
+
+function showFinal() {
+  screen = 'final';
+  bottomNav.style.display = 'none';
+  flagBtn.style.display = 'none';
+  topbarInfo.innerHTML = `<span>Complete</span>`;
+
+  let out = 'PART 1\n';
+  part1.forEach(q => { out += q.n + '-' + (answers[q.n] || '(no answer)') + '\n'; });
+  out += '\nPART 2 ESSAY\n';
+  out += (essayText.trim().length > 0 ? essayText.trim() : '(no essay written)') + '\n';
+  out += '\nPART 3\n';
+  part3.forEach(q => { out += q.n + '-' + (answers[q.n] || '(no answer)') + '\n'; });
+
+  screenContainer.innerHTML = `
+    <div class="center-screen">
+      <div class="card-box" style="max-width:720px; text-align:left;">
+        <h2 style="text-align:center;">Test Complete</h2>
+        <p style="text-align:center;">Copy the text below and send it to your GPT for grading.</p>
+        <div class="result-box">
+          <textarea id="resultBox" readonly>${out}</textarea>
+        </div>
+        <div style="text-align:center;">
+          <button class="start-btn" id="copyResultBtn" style="margin-top:14px;">Copy to Clipboard</button>
+          <div class="copied-msg" id="copiedMsg">Copied!</div>
+        </div>
+      </div>
+    </div>`;
+  document.getElementById('copyResultBtn').addEventListener('click', () => {
+    const box = document.getElementById('resultBox');
+    box.select();
+    navigator.clipboard.writeText(box.value).then(() => {
+      const msg = document.getElementById('copiedMsg');
+      msg.style.display = 'block';
+      setTimeout(()=>{ msg.style.display='none'; }, 2000);
+    });
+  });
+  progressFill.style.width = '100%';
+}
+
+document.getElementById('prevBtn').addEventListener('click', () => {
+  if (screen === 'part1' && idx1 > 0) { idx1--; renderCurrent(); }
+  else if (screen === 'part3' && idx3 > 0) { idx3--; renderCurrent(); }
+});
+document.getElementById('nextBtn').addEventListener('click', () => {
+  if (screen === 'part1') {
+    if (idx1 < part1.length - 1) { idx1++; renderCurrent(); }
+    else { showPart1Review(); }
+  } else if (screen === 'part3') {
+    if (idx3 < part3.length - 1) { idx3++; renderCurrent(); }
+    else { showFinal(); }
+  }
+});
+flagBtn.addEventListener('click', () => {
+  const q = screen === 'part1' ? part1[idx1] : (screen === 'part3' ? part3[idx3] : null);
+  if (!q) return;
+  flags[q.n] = !flags[q.n];
+  renderCurrent();
+});
+
+const paletteOverlay = document.getElementById('paletteOverlay');
+const paletteGrid = document.getElementById('paletteGrid');
+const paletteTitle = document.getElementById('paletteTitle');
+
+document.getElementById('paletteBtn').addEventListener('click', () => {
+  updatePalette();
+  paletteOverlay.classList.add('show');
+});
+document.getElementById('paletteClose').addEventListener('click', () => {
+  paletteOverlay.classList.remove('show');
+});
+paletteOverlay.addEventListener('click', (e) => {
+  if (e.target === paletteOverlay) paletteOverlay.classList.remove('show');
+});
+
+function updatePalette() {
+  const listArr = screen === 'part1' ? part1 : part3;
+  const curIdx = screen === 'part1' ? idx1 : idx3;
+  paletteTitle.textContent = (screen === 'part1' ? 'Part 1' : 'Part 3') + ' — Question Navigator';
+  paletteGrid.innerHTML = listArr.map((q, i) => {
+    const answered = answers[q.n] && answers[q.n].length > 0;
+    const isCur = i === curIdx;
+    return `<div class="palette-cell ${answered?'answered':''} ${flags[q.n]?'flagged':''} ${isCur?'current':''}" data-idx="${i}">${q.n}</div>`;
+  }).join('');
+  paletteGrid.querySelectorAll('.palette-cell').forEach(cell => {
+    cell.addEventListener('click', () => {
+      const i = parseInt(cell.dataset.idx, 10);
+      if (screen === 'part1') idx1 = i; else idx3 = i;
+      renderCurrent();
+      paletteOverlay.classList.remove('show');
+    });
+  });
+}
+
+showIntro();
+</script>
+</body>
+</html>
